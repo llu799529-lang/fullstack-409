@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!--
+    姓名：罗亚博 | 学号：409
+    时间：2026-11-16 | 大模型：DeepSeek-V4.1-Flash
+    功能名称：AI 聊天页（Claude 插件风格；多轮会话、图片识别、56 种语言）
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 聊天 · 罗亚博 409</title>
+    <link rel="stylesheet" href="css/luo_base.css">
+    <link rel="stylesheet" href="css/luo_chat.css">
+</head>
+<body class="luo_claude_body">
+
+<div class="luo_claude">
+    <aside class="luo_claude_side" id="luoSide">
+        <div class="luo_claude_brand">
+            <svg class="luo_claude_logo" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2.4c.5 3.6 1.2 5.9 2.5 7.2 1.3 1.3 3.6 2 7.1 2.4-3.5.5-5.8 1.2-7.1 2.5-1.3 1.3-2 3.6-2.5 7.1-.5-3.5-1.2-5.8-2.5-7.1-1.3-1.3-3.6-2-7.1-2.5 3.5-.4 5.8-1.1 7.1-2.4 1.3-1.3 2-3.6 2.5-7.2Z"/>
+            </svg>
+            <span class="luo_claude_wordmark">Claude</span>
+        </div>
+
+        <button type="button" class="luo_side_row luo_new" id="luoNewBtn">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M10 4.2v11.6M4.2 10h11.6"/>
+            </svg>
+            <span>新对话</span>
+        </button>
+
+        <nav class="luo_side_nav" aria-label="导航">
+            <a class="luo_side_row on" href="chat.html" aria-current="page">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M4 4.8h12v8.4H9.2L5.4 16v-2.8H4Z"/>
+                </svg>
+                <span>对话</span>
+            </a>
+            <a class="luo_side_row" href="index.html">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M3.4 9.2 10 3.6l6.6 5.6M5 8.4v8h10v-8"/>
+                </svg>
+                <span>项目首页</span>
+            </a>
+        </nav>
+
+        <div class="luo_side_label">最近</div>
+        <div class="luo_sessions" id="luoSessions">
+            <p class="luo_side_empty">加载中…</p>
+        </div>
+
+        <div class="luo_account">
+            <span class="luo_account_avatar">罗</span>
+            <span class="luo_account_text">
+                <b>罗亚博</b>
+                <i>409 · 全栈项目</i>
+            </span>
+            <a class="luo_account_link" href="index.html" title="返回项目首页" aria-label="返回项目首页">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M3.4 9.2 10 3.6l6.6 5.6M5 8.4v8h10v-8"/>
+                </svg>
+            </a>
+        </div>
+    </aside>
+
+    <div class="luo_side_mask" id="luoSideMask" hidden></div>
+
+    <main class="luo_claude_main">
+        <header class="luo_chat_top">
+            <button type="button" class="luo_icon_btn luo_menu_btn" id="luoMenuBtn" aria-label="打开会话列表">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h9"/></svg>
+            </button>
+
+            <div class="luo_top_title">
+                <b id="luoChatTitle">正在加载会话…</b>
+                <span id="luoChatMeta"></span>
+            </div>
+
+            <label class="luo_lang" title="选择 AI 的回答语言">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <circle cx="10" cy="10" r="7"/>
+                    <path d="M3 10h14M10 3c2.2 2 3.3 4.3 3.3 7s-1.1 5-3.3 7c-2.2-2-3.3-4.3-3.3-7S7.8 5 10 3Z"/>
+                </svg>
+                <span class="luo_lang_label">56 种语言</span>
+                <select id="luoLang" aria-label="回答语言"></select>
+                <svg class="luo_lang_caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+            </label>
+        </header>
+
+        <div class="luo_transcript" id="luoMsgs"></div>
+
+        <div class="luo_composer_wrap">
+            <div class="luo_attach" id="luoAttachPreview" hidden>
+                <img id="luoAttachImg" alt="待发送的图片">
+                <div class="luo_attach_info">
+                    <b id="luoAttachName">图片</b>
+                    <span id="luoAttachSize"></span>
+                </div>
+                <button type="button" class="luo_attach_del" id="luoAttachDel" aria-label="移除图片">
+                    <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7"/></svg>
+                </button>
+            </div>
+
+            <div class="luo_composer" id="luoComposer">
+                <textarea id="luoInput" rows="1" placeholder="给 AI 发消息，或点麦克风说一段话…"></textarea>
+
+                <div class="luo_composer_bar">
+                    <div class="luo_tools">
+                        <button type="button" class="luo_tool" id="luoAttachBtn" title="上传图片，让模型识别">
+                            <svg viewBox="0 0 20 20" aria-hidden="true">
+                                <rect x="3" y="4" width="14" height="12" rx="2.5"/>
+                                <circle cx="7.4" cy="8.4" r="1.3"/>
+                                <path d="M4.5 14l3.8-3.8 2.7 2.7 1.8-1.8L16 14.5"/>
+                            </svg>
+                            <span>识别图片</span>
+                        </button>
+
+                        <button type="button" class="luo_tool luo_tool_voice" id="luoVoiceBtn" title="点击开始录音，再点一次结束">
+                            <svg class="luo_mic_icon" viewBox="0 0 20 20" aria-hidden="true">
+                                <rect x="7.2" y="2.8" width="5.6" height="9.4" rx="2.8"/>
+                                <path d="M4.8 9.6a5.2 5.2 0 0 0 10.4 0M10 14.8v2.4M7.6 17.2h4.8"/>
+                            </svg>
+                            <svg class="luo_stop_icon" viewBox="0 0 20 20" aria-hidden="true">
+                                <rect x="6" y="6" width="8" height="8" rx="1.6"/>
+                            </svg>
+                            <span id="luoVoiceLabel">说话</span>
+                        </button>
+
+                        <label class="luo_auto" title="语音识别完成后直接发送">
+                            <input type="checkbox" id="luoAutoSend" checked>
+                            <span>说完自动发</span>
+                        </label>
+
+                        <span class="luo_model_tag">DeepSeek-V4-Flash</span>
+                    </div>
+
+                    <div class="luo_send_group">
+                        <button type="button" class="luo_stop" id="luoStopBtn" hidden>停止</button>
+                        <button type="button" class="luo_send" id="luoSendBtn" aria-label="发送">
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 16V4.6M4.8 9.6 10 4.4l5.2 5.2"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="luo_voice_state" id="luoVoiceState" hidden>
+                <span class="luo_voice_dot"></span>
+                <span id="luoVoiceText">正在录音…</span>
+                <span class="luo_voice_time" id="luoVoiceTime">00:00</span>
+            </div>
+
+            <p class="luo_disclaimer">
+                语音自动识别语言 · 图片由 Qwen3-VL 识别 · 回答语言可选 56 种 · 控制台可看完整请求
+            </p>
+        </div>
+    </main>
+</div>
+
+<input type="file" id="luoFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+
+<script src="js/luo_chat.js"></script>
+</body>
+</html>

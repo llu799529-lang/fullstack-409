@@ -1,0 +1,417 @@
+/**
+ * 姓名：罗亚博 | 学号：409
+ * 建立时间：2026-11-16
+ * 大模型：DeepSeek-V4.1-Flash
+ * 功能：商业评论分析页样式（上传区、饼图、统计、精选卡片、结果表格）
+ */
+
+/* ---------- 文件下载区 ---------- */
+
+.luo_files {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.luo_file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border: 1px solid #e4e9f1;
+    border-radius: 11px;
+    background: #fff;
+    text-decoration: none;
+    transition: border-color .16s, box-shadow .16s, transform .16s;
+}
+
+.luo_file:hover {
+    border-color: #c3dcff;
+    box-shadow: 0 3px 14px rgba(29, 111, 224, .07);
+    transform: translateY(-1px);
+}
+
+.luo_file_icon {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #e9f8f0;
+    color: #0b8a5c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .3px;
+}
+
+.luo_file_body {
+    min-width: 0;
+    flex: 1;
+}
+
+.luo_file_name {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1f2329;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.luo_file_desc {
+    display: block;
+    margin-top: 2px;
+    font-size: 11.5px;
+    color: #97a1b2;
+}
+
+.luo_file_go {
+    flex: none;
+    font-size: 12px;
+    color: #1d6fe0;
+    font-weight: 600;
+}
+
+/* ---------- 上传区 ---------- */
+
+.luo_drop {
+    margin-top: 12px;
+    padding: 30px 22px;
+    border: 1.5px dashed #cdd7e6;
+    border-radius: 13px;
+    background: #fbfcfe;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .18s, background .18s;
+}
+
+.luo_drop:hover,
+.luo_drop.on {
+    border-color: #1d6fe0;
+    background: #f5faff;
+}
+
+.luo_drop_icon {
+    color: #9fb0c8;
+    margin-bottom: 6px;
+}
+
+.luo_drop.on .luo_drop_icon {
+    color: #1d6fe0;
+}
+
+.luo_drop_title {
+    margin: 0;
+    font-size: 13.5px;
+    color: #3d4653;
+}
+
+.luo_drop_title span {
+    color: #1d6fe0;
+    font-weight: 600;
+}
+
+.luo_drop_tip {
+    margin: 6px 0 0;
+    font-size: 11.5px;
+    color: #9aa3b2;
+    line-height: 1.7;
+}
+
+.luo_drop_file {
+    margin: 8px 0 0;
+    font-size: 12.5px;
+    color: #0b8a5c;
+    font-weight: 600;
+    min-height: 18px;
+}
+
+.luo_actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.luo_btn_main {
+    padding: 10px 22px;
+    border: 1px solid #1f2329;
+    border-radius: 9px;
+    background: #1f2329;
+    color: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background .16s, opacity .16s;
+}
+
+.luo_btn_main:hover:not(:disabled) {
+    background: #000;
+}
+
+.luo_btn_main:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.luo_btn_ghost {
+    padding: 10px 18px;
+    border: 1px solid #dde3ec;
+    border-radius: 9px;
+    background: #fff;
+    color: #5b6472;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color .16s, color .16s;
+}
+
+.luo_btn_ghost:hover {
+    border-color: #b8c1cf;
+    color: #2b3341;
+}
+
+.luo_status {
+    font-size: 12.5px;
+    color: #97a1b2;
+}
+
+.luo_status.run {
+    color: #1d6fe0;
+}
+
+.luo_status.ok {
+    color: #0b8a5c;
+}
+
+.luo_status.err {
+    color: #c0392b;
+}
+
+/* ---------- 结果 ---------- */
+
+.luo_result {
+    margin-top: 8px;
+}
+
+.luo_summary_row {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 18px;
+    margin-top: 12px;
+    align-items: center;
+}
+
+.luo_chart_box {
+    padding: 14px 10px 8px;
+    border: 1px solid #e4e9f1;
+    border-radius: 13px;
+    background: #fff;
+    text-align: center;
+}
+
+#luoPie {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+.luo_pie_num {
+    font-size: 34px;
+    font-weight: 700;
+    fill: #1f2329;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.luo_pie_label {
+    font-size: 12px;
+    fill: #97a1b2;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.luo_legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 6px 4px 2px;
+    font-size: 12px;
+    color: #5b6472;
+}
+
+.luo_legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.luo_legend i {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.luo_stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.luo_stat {
+    padding: 15px 16px;
+    border: 1px solid #e4e9f1;
+    border-radius: 11px;
+    background: #fff;
+}
+
+.luo_stat span {
+    display: block;
+    font-size: 11.5px;
+    color: #97a1b2;
+}
+
+.luo_stat b {
+    display: block;
+    margin-top: 5px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2329;
+    font-variant-numeric: tabular-nums;
+}
+
+.luo_c_good { color: #0b8a5c !important; }
+.luo_c_neutral { color: #c9741a !important; }
+.luo_c_bad { color: #c0392b !important; }
+
+/* ---------- 精选 ---------- */
+
+.luo_featured {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.luo_fcard {
+    padding: 14px 16px;
+    border: 1px solid #e4e9f1;
+    border-left: 3px solid #0b8a5c;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.luo_fcard.mid { border-left-color: #e8a33d; }
+.luo_fcard.bad { border-left-color: #c0392b; }
+
+.luo_fcard_top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+}
+
+.luo_badge {
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 5px;
+    background: #e9f8f0;
+    color: #0b8a5c;
+}
+
+.luo_badge.mid { background: #fff5e6; color: #c9741a; }
+.luo_badge.bad { background: #fbeaea; color: #c0392b; }
+
+.luo_fcard_score {
+    margin-left: auto;
+    font-size: 11.5px;
+    color: #a3adbd;
+    font-family: Consolas, monospace;
+}
+
+.luo_fcard_text {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: #3d4653;
+}
+
+.luo_fcard_reason {
+    margin: 7px 0 0;
+    font-size: 11.5px;
+    color: #97a1b2;
+}
+
+/* ---------- 表格 ---------- */
+
+.luo_table_wrap {
+    margin-top: 10px;
+    border: 1px solid #e4e9f1;
+    border-radius: 11px;
+    overflow: auto;
+    background: #fff;
+    max-height: 520px;
+}
+
+.luo_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+}
+
+.luo_table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 10px 12px;
+    background: #f7f9fc;
+    border-bottom: 1px solid #e4e9f1;
+    color: #7b8598;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.luo_table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f3f8;
+    color: #3d4653;
+    vertical-align: top;
+    line-height: 1.75;
+}
+
+.luo_table tr:last-child td {
+    border-bottom: none;
+}
+
+.luo_table tbody tr:hover {
+    background: #fbfcfe;
+}
+
+.luo_table .num {
+    font-family: Consolas, monospace;
+    color: #a3adbd;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+    .luo_files,
+    .luo_featured {
+        grid-template-columns: 1fr;
+    }
+
+    .luo_summary_row {
+        grid-template-columns: 1fr;
+    }
+
+    .luo_stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

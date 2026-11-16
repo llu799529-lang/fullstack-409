@@ -1,0 +1,1194 @@
+/*
+ * 姓名：罗亚博 | 学号：409
+ * 时间：2026-11-16 | 大模型：DeepSeek-V4.1-Flash
+ * 功能名称：AI 聊天页样式（Claude 皮肤：暖白画布、陶土强调色、衬线标题、左侧会话栏）
+ */
+
+:root {
+    --luo-claude-accent: #d97757;
+    --luo-claude-accent-hover: #c46343;
+    --luo-claude-accent-tint: rgba(217, 119, 87, 0.1);
+    --luo-claude-canvas: #ffffff;
+    --luo-claude-sidebar: #f0eee6;
+    --luo-claude-bubble: #f4f2f3;
+    --luo-claude-ink: #161616;
+    --luo-claude-ink-2: #5f5b57;
+    --luo-claude-ink-3: #8a8580;
+    --luo-claude-ink-4: #b3ada6;
+    --luo-claude-border: #e9e9e9;
+    --luo-claude-border-2: #dedede;
+    --luo-claude-divider: rgba(22, 22, 22, 0.06);
+    --luo-claude-hover: rgba(6, 6, 6, 0.05);
+    --luo-claude-code: rgba(6, 6, 6, 0.05);
+    --luo-claude-serif: "Iowan Old Style", "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+    --luo-claude-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --luo-claude-mono: "SF Mono", "JetBrains Mono", Consolas, monospace;
+    --luo-claude-ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --luo-claude-canvas: #191919;
+        --luo-claude-sidebar: #262624;
+        --luo-claude-bubble: rgba(255, 255, 255, 0.06);
+        --luo-claude-ink: #fdfdfd;
+        --luo-claude-ink-2: #c9c5c0;
+        --luo-claude-ink-3: #9c9791;
+        --luo-claude-ink-4: #77726c;
+        --luo-claude-border: rgba(255, 255, 255, 0.09);
+        --luo-claude-border-2: rgba(255, 255, 255, 0.18);
+        --luo-claude-divider: rgba(255, 255, 255, 0.06);
+        --luo-claude-hover: rgba(255, 255, 255, 0.08);
+        --luo-claude-code: rgba(255, 255, 255, 0.05);
+        --luo-claude-accent-tint: rgba(217, 119, 87, 0.18);
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body.luo_claude_body {
+    margin: 0;
+    overflow: hidden;
+    background: var(--luo-claude-canvas);
+    color: var(--luo-claude-ink);
+    font-family: var(--luo-claude-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+body.luo_claude_body ::selection {
+    background: var(--luo-claude-accent-tint);
+}
+
+button,
+select,
+textarea,
+input {
+    font-family: inherit;
+}
+
+/* ==================== 整体框架 ==================== */
+
+.luo_claude {
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* ==================== 左侧会话栏 ==================== */
+
+.luo_claude_side {
+    flex: 0 0 272px;
+    width: 272px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 16px 12px 10px;
+    background: var(--luo-claude-sidebar);
+    border-right: 0.5px solid rgba(22, 22, 22, 0.08);
+}
+
+.luo_claude_brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 7px 18px;
+}
+
+.luo_claude_logo {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    fill: var(--luo-claude-accent);
+}
+
+.luo_claude_wordmark {
+    font-family: var(--luo-claude-serif);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    color: var(--luo-claude-ink);
+}
+
+.luo_side_row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    height: 34px;
+    padding: 0 9px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--luo-claude-ink-2);
+    font-size: 13px;
+    font-weight: 450;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.12s var(--luo-claude-ease), color 0.12s var(--luo-claude-ease);
+}
+
+.luo_side_row svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.luo_side_row:hover {
+    background: rgba(80, 70, 55, 0.08);
+    color: var(--luo-claude-ink);
+}
+
+.luo_side_row.on {
+    background: rgba(80, 70, 55, 0.1);
+    color: var(--luo-claude-ink);
+    font-weight: 500;
+}
+
+.luo_new {
+    margin-bottom: 8px;
+}
+
+.luo_side_nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 0.5px solid var(--luo-claude-divider);
+}
+
+.luo_side_label {
+    padding: 0 9px 6px;
+    font-size: 11px;
+    color: var(--luo-claude-ink-3);
+}
+
+.luo_sessions {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 0 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--luo-claude-border-2) transparent;
+}
+
+.luo_sessions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.luo_sessions::-webkit-scrollbar-thumb {
+    background: var(--luo-claude-border-2);
+    border-radius: 3px;
+}
+
+.luo_side_empty {
+    margin: 0;
+    padding: 20px 10px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--luo-claude-ink-4);
+}
+
+.luo_session {
+    position: relative;
+    padding: 7px 28px 8px 9px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.12s var(--luo-claude-ease);
+}
+
+.luo_session:hover {
+    background: rgba(80, 70, 55, 0.07);
+}
+
+.luo_session.on {
+    background: rgba(80, 70, 55, 0.1);
+}
+
+.luo_session b {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12.8px;
+    font-weight: 450;
+    color: var(--luo-claude-ink-2);
+}
+
+.luo_session.on b {
+    color: var(--luo-claude-ink);
+}
+
+.luo_session i {
+    display: block;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-style: normal;
+    font-size: 10.8px;
+    color: var(--luo-claude-ink-4);
+}
+
+.luo_del {
+    position: absolute;
+    top: 6px;
+    right: 5px;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--luo-claude-ink-4);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.12s, background 0.12s, color 0.12s;
+}
+
+.luo_session:hover .luo_del,
+.luo_del:focus-visible {
+    opacity: 1;
+}
+
+.luo_del:hover {
+    background: rgba(192, 57, 43, 0.1);
+    color: #c0392b;
+}
+
+.luo_account {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 8px;
+    padding: 11px 7px 4px;
+    border-top: 0.5px solid var(--luo-claude-divider);
+}
+
+.luo_account_avatar {
+    width: 26px;
+    height: 26px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--luo-claude-accent);
+    color: #ffffff;
+    font-family: var(--luo-claude-serif);
+    font-size: 13px;
+}
+
+.luo_account_text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.3;
+}
+
+.luo_account_text b {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--luo-claude-ink);
+}
+
+.luo_account_text i {
+    font-style: normal;
+    font-size: 10.8px;
+    color: var(--luo-claude-ink-3);
+}
+
+.luo_account_link {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    color: var(--luo-claude-ink-3);
+    text-decoration: none;
+    transition: background 0.12s, color 0.12s;
+}
+
+.luo_account_link:hover {
+    background: rgba(80, 70, 55, 0.08);
+    color: var(--luo-claude-ink);
+}
+
+.luo_account_link svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.luo_side_mask {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(22, 22, 22, 0.28);
+}
+
+/* ==================== 主区域 ==================== */
+
+.luo_claude_main {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    background: var(--luo-claude-canvas);
+}
+
+.luo_chat_top {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 58px;
+    padding: 0 20px;
+    border-bottom: 0.5px solid var(--luo-claude-divider);
+}
+
+.luo_icon_btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--luo-claude-ink-2);
+    cursor: pointer;
+}
+
+.luo_icon_btn:hover {
+    background: var(--luo-claude-hover);
+}
+
+.luo_icon_btn svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+}
+
+.luo_top_title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.luo_top_title b {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--luo-claude-ink);
+}
+
+.luo_top_title span {
+    flex: none;
+    font-size: 11.5px;
+    color: var(--luo-claude-ink-4);
+    font-variant-numeric: tabular-nums;
+}
+
+/* 语言选择 */
+
+.luo_lang {
+    position: relative;
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 9px;
+    border: 1px solid var(--luo-claude-border);
+    border-radius: 8px;
+    background: var(--luo-claude-canvas);
+    color: var(--luo-claude-ink-2);
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s;
+}
+
+.luo_lang:hover {
+    border-color: var(--luo-claude-border-2);
+    background: var(--luo-claude-hover);
+}
+
+.luo_lang > svg:first-child {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.3;
+}
+
+.luo_lang_label {
+    font-size: 11px;
+    color: var(--luo-claude-ink-4);
+    white-space: nowrap;
+}
+
+.luo_lang select {
+    max-width: 116px;
+    padding: 0 2px;
+    border: 0;
+    background: transparent;
+    color: var(--luo-claude-ink);
+    font-size: 12px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.luo_lang_caret {
+    width: 10px;
+    height: 10px;
+    fill: none;
+    stroke: var(--luo-claude-ink-4);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+/* ==================== 对话区 ==================== */
+
+.luo_transcript {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 30px 24px 10px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--luo-claude-border-2) transparent;
+}
+
+.luo_transcript::-webkit-scrollbar {
+    width: 7px;
+}
+
+.luo_transcript::-webkit-scrollbar-thumb {
+    background: var(--luo-claude-border-2);
+    border-radius: 4px;
+}
+
+.luo_msg {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto 26px;
+    align-items: flex-start;
+    animation: luoEnter 0.24s var(--luo-claude-ease) both;
+}
+
+@keyframes luoEnter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.luo_ai_mark {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    color: var(--luo-claude-accent);
+}
+
+.luo_ai_mark svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.luo_msg_body {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.76;
+    color: var(--luo-claude-ink);
+    word-break: break-word;
+}
+
+/* 用户消息 */
+
+.luo_msg.luo_me {
+    justify-content: flex-end;
+}
+
+.luo_msg.luo_me .luo_bubble {
+    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: 16px 16px 4px 16px;
+    background: var(--luo-claude-bubble);
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--luo-claude-ink);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.luo_msg.luo_err .luo_bubble {
+    background: rgba(192, 57, 43, 0.06);
+    border: 1px solid rgba(192, 57, 43, 0.2);
+    border-radius: 12px;
+    color: #a5352a;
+}
+
+.luo_msg_img {
+    display: block;
+    max-width: 100%;
+    max-height: 260px;
+    margin-top: 8px;
+    border-radius: 10px;
+    border: 1px solid var(--luo-claude-border);
+    object-fit: cover;
+}
+
+/* 消息脚注 */
+
+.luo_time {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--luo-claude-ink-4);
+}
+
+.luo_msg.luo_me .luo_time {
+    margin-top: 6px;
+    text-align: right;
+}
+
+.luo_msg_meta {
+    margin-top: 7px;
+    font-size: 11px;
+    color: var(--luo-claude-ink-4);
+    font-variant-numeric: tabular-nums;
+}
+
+.luo_msg_meta i {
+    font-style: normal;
+    color: var(--luo-claude-ink-3);
+}
+
+/* 打字指示 */
+
+.luo_typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 20px;
+}
+
+.luo_typing i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--luo-claude-ink-4);
+    animation: luoBlink 1.2s infinite ease-in-out;
+}
+
+.luo_typing i:nth-child(2) {
+    animation-delay: 0.18s;
+}
+
+.luo_typing i:nth-child(3) {
+    animation-delay: 0.36s;
+}
+
+@keyframes luoBlink {
+    0%, 80%, 100% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+    40% {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+}
+
+/* ==================== Markdown ==================== */
+
+.luo_md > *:first-child {
+    margin-top: 0;
+}
+
+.luo_md > *:last-child {
+    margin-bottom: 0;
+}
+
+.luo_md p {
+    margin: 0 0 12px;
+}
+
+.luo_md h1,
+.luo_md h2,
+.luo_md h3 {
+    margin: 22px 0 9px;
+    font-family: var(--luo-claude-serif);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+}
+
+.luo_md h1 {
+    font-size: 23px;
+}
+
+.luo_md h2 {
+    font-size: 19px;
+}
+
+.luo_md h3 {
+    font-size: 16.5px;
+}
+
+.luo_md ul,
+.luo_md ol {
+    margin: 0 0 12px;
+    padding-left: 22px;
+}
+
+.luo_md li {
+    margin: 4px 0;
+}
+
+.luo_md blockquote {
+    margin: 12px 0;
+    padding: 2px 0 2px 14px;
+    border-left: 2px solid var(--luo-claude-border-2);
+    color: var(--luo-claude-ink-2);
+}
+
+.luo_md hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 0.5px solid var(--luo-claude-divider);
+}
+
+.luo_md code {
+    padding: 1.5px 5px;
+    border-radius: 4px;
+    background: var(--luo-claude-code);
+    font-family: var(--luo-claude-mono);
+    font-size: 12.8px;
+}
+
+.luo_md pre {
+    margin: 12px 0;
+    padding: 13px 15px;
+    overflow-x: auto;
+    border: 1px solid var(--luo-claude-border);
+    border-radius: 10px;
+    background: var(--luo-claude-canvas);
+    font-family: var(--luo-claude-mono);
+    font-size: 12.8px;
+    line-height: 1.7;
+}
+
+.luo_md pre code {
+    padding: 0;
+    background: transparent;
+    font-size: inherit;
+}
+
+.luo_md a {
+    color: #184f95;
+    text-decoration: underline;
+    text-decoration-color: rgba(24, 79, 149, 0.35);
+    text-underline-offset: 2px;
+}
+
+.luo_md table {
+    width: 100%;
+    margin: 12px 0;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.luo_md th,
+.luo_md td {
+    padding: 7px 10px;
+    border: 1px solid var(--luo-claude-border);
+    text-align: left;
+    vertical-align: top;
+}
+
+.luo_md th {
+    background: var(--luo-claude-hover);
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    .luo_md a {
+        color: #8ab4f8;
+        text-decoration-color: rgba(138, 180, 248, 0.4);
+    }
+}
+
+/* ==================== 输入区 ==================== */
+
+.luo_composer_wrap {
+    flex: none;
+    width: 100%;
+    max-width: 808px;
+    margin: 0 auto;
+    padding: 6px 24px 16px;
+}
+
+.luo_attach {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    max-width: 340px;
+    margin-bottom: 8px;
+    padding: 6px 8px 6px 6px;
+    border: 1px solid var(--luo-claude-border);
+    border-radius: 12px;
+    background: var(--luo-claude-canvas);
+    animation: luoEnter 0.18s var(--luo-claude-ease) both;
+}
+
+.luo_attach[hidden] {
+    display: none;
+}
+
+.luo_attach img {
+    width: 42px;
+    height: 42px;
+    flex: none;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--luo-claude-hover);
+}
+
+.luo_attach_info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.35;
+}
+
+.luo_attach_info b {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--luo-claude-ink);
+}
+
+.luo_attach_info span {
+    font-size: 11px;
+    color: var(--luo-claude-ink-4);
+}
+
+.luo_attach_del {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--luo-claude-ink-4);
+    cursor: pointer;
+}
+
+.luo_attach_del:hover {
+    background: var(--luo-claude-hover);
+    color: var(--luo-claude-ink);
+}
+
+.luo_attach_del svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+}
+
+.luo_composer {
+    border: 1px solid var(--luo-claude-border-2);
+    border-radius: 16px;
+    background: var(--luo-claude-canvas);
+    box-shadow: 0 2px 10px rgba(20, 20, 19, 0.035);
+    transition: border-color 0.16s var(--luo-claude-ease), box-shadow 0.16s var(--luo-claude-ease);
+}
+
+.luo_composer:focus-within {
+    border-color: var(--luo-claude-ink-4);
+    box-shadow: 0 0 0 3px rgba(22, 22, 22, 0.035), 0 6px 18px rgba(20, 20, 19, 0.06);
+}
+
+.luo_composer textarea {
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    max-height: 180px;
+    padding: 14px 16px 4px;
+    border: 0;
+    background: transparent;
+    color: var(--luo-claude-ink);
+    font-size: 15px;
+    line-height: 1.65;
+    resize: none;
+    outline: none;
+}
+
+.luo_composer textarea::placeholder {
+    color: var(--luo-claude-ink-4);
+}
+
+.luo_composer_bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 4px 9px 9px 10px;
+}
+
+.luo_tools {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+}
+
+.luo_tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--luo-claude-ink-2);
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+}
+
+.luo_tool:hover {
+    background: var(--luo-claude-hover);
+    color: var(--luo-claude-ink);
+}
+
+.luo_tool svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.luo_tool .luo_stop_icon {
+    display: none;
+}
+
+.luo_tool_voice.recording {
+    background: var(--luo-claude-accent-tint);
+    color: var(--luo-claude-accent);
+}
+
+.luo_tool_voice.recording .luo_mic_icon {
+    display: none;
+}
+
+.luo_tool_voice.recording .luo_stop_icon {
+    display: block;
+}
+
+.luo_tool_voice.busy {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.luo_auto {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 3px;
+    padding: 3px 5px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--luo-claude-ink-3);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.luo_auto:hover {
+    background: var(--luo-claude-hover);
+}
+
+.luo_auto input {
+    width: 12px;
+    height: 12px;
+    margin: 0;
+    accent-color: var(--luo-claude-accent);
+    cursor: pointer;
+}
+
+.luo_model_tag {
+    margin-left: 4px;
+    padding-left: 9px;
+    border-left: 0.5px solid var(--luo-claude-divider);
+    font-size: 10.5px;
+    color: var(--luo-claude-ink-4);
+    white-space: nowrap;
+}
+
+.luo_send_group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+}
+
+.luo_stop {
+    height: 26px;
+    padding: 0 9px;
+    border: 1px solid var(--luo-claude-border);
+    border-radius: 7px;
+    background: transparent;
+    color: var(--luo-claude-ink-2);
+    font-size: 11.5px;
+    cursor: pointer;
+}
+
+.luo_stop:hover {
+    background: var(--luo-claude-hover);
+}
+
+.luo_stop[hidden] {
+    display: none;
+}
+
+.luo_send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--luo-claude-accent);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.12s var(--luo-claude-ease), opacity 0.12s;
+}
+
+.luo_send svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.luo_send:hover {
+    background: var(--luo-claude-accent-hover);
+}
+
+.luo_send[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* 录音状态 */
+
+.luo_voice_state {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: fit-content;
+    margin: 8px auto 0;
+    padding: 4px 10px;
+    border: 1px solid var(--luo-claude-border);
+    border-radius: 20px;
+    background: var(--luo-claude-canvas);
+    font-size: 11.5px;
+    color: var(--luo-claude-ink-2);
+    animation: luoEnter 0.16s var(--luo-claude-ease) both;
+}
+
+.luo_voice_state[hidden] {
+    display: none;
+}
+
+.luo_voice_dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--luo-claude-accent);
+    animation: luoVoicePulse 1.1s infinite ease-in-out;
+}
+
+@keyframes luoVoicePulse {
+    0%, 100% {
+        opacity: 0.35;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.luo_voice_time {
+    font-family: var(--luo-claude-mono);
+    font-size: 11px;
+    color: var(--luo-claude-ink-3);
+    font-variant-numeric: tabular-nums;
+}
+
+.luo_voice_state.recognizing .luo_voice_dot {
+    animation-duration: 1.6s;
+}
+
+.luo_disclaimer {
+    margin: 8px 0 0;
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--luo-claude-ink-4);
+}
+
+/* ==================== 响应式 ==================== */
+
+@media (max-width: 720px) {
+    .luo_claude_side {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 50;
+        transform: translateX(-100%);
+        transition: transform 0.24s var(--luo-claude-ease);
+        box-shadow: 12px 0 32px rgba(20, 20, 19, 0.12);
+    }
+
+    .luo_claude.side_open .luo_claude_side {
+        transform: translateX(0);
+    }
+
+    .luo_menu_btn {
+        display: flex;
+    }
+
+    .luo_chat_top {
+        padding: 0 12px;
+        gap: 8px;
+    }
+
+    .luo_lang_label {
+        display: none;
+    }
+
+    .luo_lang select {
+        max-width: 92px;
+    }
+
+    .luo_transcript {
+        padding: 22px 14px 8px;
+    }
+
+    .luo_msg {
+        margin-bottom: 22px;
+    }
+
+    .luo_msg.luo_me .luo_bubble {
+        max-width: 90%;
+    }
+
+    .luo_composer_wrap {
+        padding: 4px 12px 12px;
+    }
+
+    .luo_auto span,
+    .luo_model_tag {
+        display: none;
+    }
+
+    .luo_auto {
+        padding: 4px;
+    }
+
+    .luo_tool span {
+        display: none;
+    }
+
+    .luo_tool {
+        padding: 0 6px;
+    }
+}
+
+@media (max-width: 520px) {
+    .luo_top_title span {
+        display: none;
+    }
+
+    .luo_lang {
+        padding: 0 7px;
+    }
+
+    .luo_composer textarea {
+        font-size: 14.5px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

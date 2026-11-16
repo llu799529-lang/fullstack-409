@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!--
+    姓名：罗亚博 | 学号：409
+    时间：2026-11-16 | 大模型：DeepSeek-V4.1-Flash
+    功能名称：商业评论分析（上传 Excel，调用大模型逐条判定好评/中评/差评，饼图展示并列出精选评论）
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商业评论分析 · 罗亚博 409</title>
+    <link rel="stylesheet" href="css/luo_base.css">
+    <link rel="stylesheet" href="css/luo_review.css">
+</head>
+<body>
+<canvas id="luoCanvas" class="luo_canvas"></canvas>
+
+<div class="luo_page">
+    <header class="luo_head">
+        <h1 class="luo_title">商业评论分析</h1>
+        <p class="luo_sub">
+            上传一个 Excel（每行一条商业评论），后端调用大模型逐条判定
+            <b>好评 / 中评 / 差评</b>，返回固定结构的 JSON，页面用饼图展示分布并挑出有价值的精选评论。
+        </p>
+
+        <dl class="luo_meta">
+            <div><dt>姓名</dt><dd>罗亚博</dd></div>
+            <div><dt>学号</dt><dd>409</dd></div>
+            <div><dt>接口</dt><dd>/api/review/analyze</dd></div>
+            <div><dt>服务端口</dt><dd>409</dd></div>
+        </dl>
+    </header>
+
+    <main>
+        <h2 class="luo_h2">① 准备数据 <span class="luo_count">4 个文件</span></h2>
+        <p class="luo_hint">
+            根目录下已经生成 3 个模拟数据（每个 20 条评论）和一个导入模板。直接点下面下载，填好后再上传。
+        </p>
+        <div class="luo_files" id="luoFiles">
+            <p class="luo_empty">正在读取文件清单…</p>
+        </div>
+
+        <h2 class="luo_h2">② 上传 Excel</h2>
+        <div class="luo_drop" id="luoDrop">
+            <input type="file" id="luoFileInput" accept=".xlsx,.xls" hidden>
+            <div class="luo_drop_icon">
+                <svg viewBox="0 0 48 48" width="34" height="34" aria-hidden="true">
+                    <path d="M10 30v6a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                    <path d="M24 32V10M16 18l8-8 8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <p class="luo_drop_title">把 .xlsx 拖到这里，或 <span>点击选择文件</span></p>
+            <p class="luo_drop_tip">表头需包含「评论内容」，其余列（序号 / 评分 / 用户昵称 / 评论时间）可选　·　单次建议不超过 60 条</p>
+            <p class="luo_drop_file" id="luoDropFile"></p>
+        </div>
+
+        <div class="luo_actions">
+            <button type="button" class="luo_btn_main" id="luoAnalyzeBtn" disabled>开始分析</button>
+            <button type="button" class="luo_btn_ghost" id="luoResetBtn">清空结果</button>
+            <span class="luo_status" id="luoStatus">等待选择文件</span>
+        </div>
+
+        <section class="luo_result" id="luoResult" hidden>
+            <h2 class="luo_h2">③ 分析结果 <span class="luo_count" id="luoResultMeta">—</span></h2>
+
+            <div class="luo_summary_row">
+                <div class="luo_chart_box">
+                    <svg id="luoPie" viewBox="0 0 240 240" role="img" aria-label="评论情感分布饼图">
+                        <g id="luoPieSlices"></g>
+                        <text id="luoPieTotal" x="120" y="112" text-anchor="middle" class="luo_pie_num">0</text>
+                        <text x="120" y="134" text-anchor="middle" class="luo_pie_label">条评论</text>
+                    </svg>
+                    <div class="luo_legend" id="luoLegend"></div>
+                </div>
+
+                <div class="luo_stats">
+                    <div class="luo_stat"><span>评论总数</span><b id="luoStatTotal">0</b></div>
+                    <div class="luo_stat"><span>好评</span><b id="luoStatGood" class="luo_c_good">0</b></div>
+                    <div class="luo_stat"><span>中评</span><b id="luoStatNeutral" class="luo_c_neutral">0</b></div>
+                    <div class="luo_stat"><span>差评</span><b id="luoStatBad" class="luo_c_bad">0</b></div>
+                    <div class="luo_stat"><span>平均情感分</span><b id="luoStatAvg">0</b></div>
+                    <div class="luo_stat"><span>精选评论</span><b id="luoStatFeatured">0</b></div>
+                </div>
+            </div>
+
+            <h3 class="luo_h3">精选评论 <span class="luo_count" id="luoFeaturedHint">—</span></h3>
+            <div class="luo_featured" id="luoFeatured"></div>
+
+            <h3 class="luo_h3">全部评论 <span class="luo_count" id="luoAllHint">—</span></h3>
+            <div class="luo_table_wrap">
+                <table class="luo_table">
+                    <thead>
+                    <tr><th style="width:52px">编号</th><th>评论内容</th><th style="width:78px">判定</th><th style="width:64px">情感分</th><th>判断依据</th></tr>
+                    </thead>
+                    <tbody id="luoTableBody"></tbody>
+                </table>
+            </div>
+
+            <h2 class="luo_h2">④ 交互数据 <span class="luo_count" id="luoRawHint">发送与接收</span></h2>
+            <details class="luo_raw" id="luoRawBox">
+                <summary>展开：发送给大模型的提示词 + 收到的原始 JSON</summary>
+                <pre class="luo_code" id="luoRaw">—</pre>
+            </details>
+        </section>
+    </main>
+
+    <footer class="luo_foot">
+        罗亚博 · 学号 409 · 计算机 24004 · 2026-11-16 ·
+        <a href="index.html">返回首页</a>
+    </footer>
+</div>
+
+<script src="js/luo_nav.js"></script>
+<script src="js/luo_canvas.js"></script>
+<script src="js/luo_review.js"></script>
+</body>
+</html>
