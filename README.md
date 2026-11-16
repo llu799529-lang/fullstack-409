@@ -26,21 +26,27 @@ fullstack-409/
 ├─ AGENTS.md                 开发规则（本项目的唯一规则来源）
 ├─ README.md                 本文件
 ├─ run.bat                   启动后端的批处理
+├─ start.bat                 一键启动（检查环境 + 安装依赖 + 启动）
 ├─ luoyabo_prompt.md         提示词记录（追加写入）
 ├─ .gitignore                已排除 node_modules 与 backend/.env
 ├─ frontend/                 前端（express.static 托管）
 │  ├─ index.html             首页：项目信息 + 页面导航 + canvas 背景动画
+│  ├─ news.html              新闻列表（MySQL）
+│  ├─ gallery.html           图片列表（MySQL）
+│  ├─ knowledge.html         校园知识库（供 AI 聊天检索）
+│  ├─ review.html            商业评论 Excel 上传 + LLM 判定 + 饼图
+│  ├─ chat.html              AI 聊天（Claude 风格 / 语音 / 图片 / 56 种语言）
 │  ├─ database.html          数据库连接测试
-│  ├─ css/                   luo_base.css / luo_index.css / luo_database.css
-│  ├─ js/                    luo_canvas.js / luo_index.js / luo_db.js
-│  ├─ fonts/                 图标字体（暂空）
-│  └─ images/                图片（暂空）
+│  ├─ css/                   luo_base.css / luo_index.css / luo_chat.css 等
+│  ├─ js/                    luo_canvas.js / luo_chat.js / luo_nav.js 等
+│  ├─ fonts/                 图标字体
+│  └─ images/                页面配图
 └─ backend/
    ├─ app.js                 服务入口（端口 409、跨域、静态托管）
    ├─ config/luo_db.js       MySQL 连接池
    ├─ routes/luo_api.js      API 路由表（全部 /api 前缀）
-   ├─ controllers/luo_db_controller.js
-   ├─ .env                   数据库凭据（已被 git 忽略）
+   ├─ controllers/           数据库 / 新闻 / 图片 / 知识库 / 评论 / 聊天 / 语音
+   ├─ .env                   数据库与 LLM 凭据（已被 git 忽略）
    ├─ luo_interface.md       接口记录（追加写入）
    └─ luo_database.md        数据库记录（追加写入）
 ```
@@ -81,13 +87,29 @@ fullstack-409/
 | 页面 | 说明 |
 |---|---|
 | `index.html` | 项目名称、姓名、学号、项目类别，全部页面的超链接导航，canvas 粒子背景 |
+| `news.html` | 新闻列表，数据来自 MySQL `luo_news` |
+| `gallery.html` | 图片列表，数据来自 MySQL `luo_gallery` |
+| `knowledge.html` | 校园知识库，显示 409 端口，供 AI 聊天检索 |
+| `review.html` | 上传商业评论 Excel，LLM 逐条判定好评/中评/差评，SVG 饼图 |
+| `chat.html` | Claude 风格 AI 聊天：语音输入、图片识别、56 种回答语言、会话入库 |
 | `database.html` | 输入用户名密码测试 MySQL 连接，成功显示版本与库列表，失败显示中文原因与错误码 |
 
 新增页面后，会在 `frontend/index.html` 的导航列表里追加一行（文件名含 `detail` 的页面除外）。
 
 ---
 
-## 六、开发约定摘要
+## 六、AI 聊天
+
+- 页面：`frontend/chat.html`，整体仿 Claude 皮肤（暖米色侧栏、陶土强调色、衬线标题）
+- 语音输入：浏览器录音 → `POST /api/speech` → 硅基流动 `FunAudioLLM/SenseVoiceSmall` 自动识别语言
+- 图片识别：前端压缩后随聊天请求发送 → 后端切换 `Qwen/Qwen3-VL-32B-Instruct`
+- 文字聊天：`deepseek-ai/DeepSeek-V4-Flash`
+- 回答语言：56 种可选，写入 system 提示词；语音识别主要覆盖中/英/粤/日/韩
+- 会话与消息存 MySQL，早期对话自动压成摘要；提示词与模型返回都打印在浏览器控制台
+
+---
+
+## 七、开发约定摘要
 
 完整规则见 `AGENTS.md`，要点：
 
